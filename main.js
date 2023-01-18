@@ -56,17 +56,16 @@ const posts = [
     }
 ];
 
-
-posts.forEach(postData => {
-    
-});
-
+// Stampa i dati di tutti i posts 
 console.log("Posts", posts);
+
+// Conterra' gli ID dei post piaciuti
+let likedPosts = [];
 
 const postList = document.querySelector(".posts-list");
 
 // Stampa posts nel feed
-posts.forEach(postData => {
+posts.forEach((postData, index) => {
 
     // Destructuring  proprieta' "created" degli elementi di "posts"
     const date =  postData.created.split("-");
@@ -104,7 +103,7 @@ posts.forEach(postData => {
     <div class="post__footer">
         <div class="likes js-likes">
             <div class="likes__cta">
-                <a class="like-button  js-like-button" href="#" data-postid="1">
+                <a class="like-button  js-like-button" href="##" data-postid="1">
                     <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                     <span class="like-button__label">Mi Piace</span>
                 </a>
@@ -118,5 +117,41 @@ posts.forEach(postData => {
     
     // Aggiunge nuovo post alla pagina
     postList.append(newPost);
-});
 
+    console.log("Post creato");
+
+    // Event Listener Pulsante Like
+    const newLikeBtn = document.querySelector(`.post:nth-child(${index + 1}) .js-like-button`);
+    const newLikesCounter = document.querySelector(`.post:nth-child(${index + 1}) .js-likes-counter`);
+
+    newLikeBtn.addEventListener("click", function() {
+
+        // Se il post non e' gia' stato aggiunto ai post piaciuti...
+        if (likedPosts.includes(postData.id)) {
+            newLikeBtn.classList.remove("like-button--liked");
+
+            // Decrementa il contatore
+            postData.likes--;
+            newLikesCounter.innerHTML = postData.likes;
+
+            // Rimuove l'ID del post dall'array dei post piaciuti
+            const postIndex = likedPosts.indexOf(postData.id);
+            likedPosts.splice(postIndex, 1);
+        }
+        // ... se il post non e' gia' stato aggiunto ai post piaciuti
+        else {
+            newLikeBtn.classList.add("like-button--liked");
+
+            // Incrementa il contatore
+            postData.likes++;
+            newLikesCounter.innerHTML = postData.likes;
+
+            // Aggiunge l'ID del post all'array dei post piaciuti
+            likedPosts.push(postData.id)
+        }
+
+        console.log("Posts piaciuti:", likedPosts);
+
+    })
+
+});
